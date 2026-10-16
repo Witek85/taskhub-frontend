@@ -1,0 +1,80 @@
+@if (task(); as task) {
+  <p-card [header]="task.name">
+    <p>
+      {{ task.description }}
+    </p>
+
+    <p>
+      <strong>Tags:</strong>
+
+      @if (task.tags.length) {
+        <div class="flex flex-wrap justify-start gap-2">
+          @for (tag of task.tags; track tag.code) {
+            <ws-tag-pill [value]="tag.label" [color]="tag.color ?? null" />
+          }
+        </div>
+      } @else {
+        <span>No tags</span>
+      }
+    </p>
+
+    <p>
+      Priority:
+      <ws-tag-pill [value]="task.priority" />
+    </p>
+
+    <p>
+      Status:
+      <ws-tag-pill [value]="task.status" />
+    </p>
+
+    <p>Created: {{ task.createdAt | date: 'dd.MM.yyyy HH:mm' }}</p>
+    <p>Updated: {{ task.updatedAt | date: 'dd.MM.yyyy HH:mm' }}</p>
+
+    <div class="md:w-1/2">
+      <span class="block text-muted-color font-medium mb-4">POST A COMMENT</span>
+
+      <div class="flex flex-wrap mb-2">
+        <textarea
+          rows="5"
+          cols="30"
+          pTextarea
+          fluid
+          [ngModel]="newComment()"
+          (ngModelChange)="newComment.set($event)"
+          placeholder="Write a comment..."
+        ></textarea>
+      </div>
+
+      <div class="flex justify-end mb-2">
+        <p-button label="Submit" (onClick)="addComment()" [disabled]="!newComment()"></p-button>
+      </div>
+
+      <span class="block text-muted-color font-medium mb-4">COMMENTS</span>
+
+      <ul class="p-0 mx-0 mt-0 mb-6 list-none">
+        @for (comment of comments(); track comment.id; let last = $last) {
+          <li
+            class="flex items-center py-2"
+            [class.border-b]="!last"
+            [class.border-surface]="!last"
+          >
+            <div
+              class="w-12 h-12 flex items-center justify-center bg-gray-100 dark:bg-gray-400/10 rounded-full mr-4 shrink-0"
+            >
+              <!-- TODO icon or first letter   -->
+            </div>
+            <span class="text-surface-900 dark:text-surface-0 leading-normal">
+              <div>{{ comment.content }}</div>
+              <div class="text-sm text-surface-500 mt-2">
+                {{ comment.createdAt | date: 'yyyy-MM-dd HH:mm' }}
+              </div>
+            </span>
+          </li>
+        } @empty {
+          <div>No comments yet.</div>
+        }
+      </ul>
+    </div>
+  </p-card>
+}

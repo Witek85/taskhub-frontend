@@ -1,0 +1,18 @@
+{
+  "generatorName": "typescript-angular",
+  "inputSpec": "openapi/taskhub-service/openapi.json",
+  "outputDir": "openapi/taskhub-service/generated",
+  "additionalProperties": {
+    "ngVersion": "21.0.0",
+    "providedIn": "root",
+    "apiModulePrefix": "Taskhub",
+    "serviceSuffix": "OpenApiService",
+    "serviceFileSuffix": ".openapi.service",
+    "useSingleRequestParameter": true,
+    "stringEnums": true,
+    "withInterfaces": false,
+    "fileNaming": "kebab-case",
+    "modelPropertyNaming": "original",
+    "enumPropertyNaming": "original"
+  }
+}

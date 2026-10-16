@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://taskhub.itreallyworks.pl",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

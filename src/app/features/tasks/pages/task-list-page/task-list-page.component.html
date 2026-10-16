@@ -1,0 +1,140 @@
+<h1>Tasks</h1>
+
+<div class="card flex flex-col gap-4">
+  <form [formGroup]="taskListPageStateService.taskFilterForm">
+    <div class="font-semibold text-l mb-2">Filters</div>
+    <div class="flex flex-wrap gap-6">
+      <div class="flex flex-col grow basis-0 gap-2">
+        <label for="name2">Name</label>
+        <input
+          pInputText
+          type="text"
+          [formControl]="taskListPageStateService.taskFilterForm.controls.name"
+        />
+      </div>
+      <div class="flex flex-col grow basis-0 gap-2">
+        <label for="name2">Priority</label>
+        <p-select
+          [formControl]="taskListPageStateService.taskFilterForm.controls.priority"
+          [options]="priorities()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select"
+        />
+      </div>
+      <div class="flex flex-col grow basis-0 gap-2">
+        <label for="name2">Status</label>
+        <p-select
+          [formControl]="taskListPageStateService.taskFilterForm.controls.status"
+          [options]="statuses()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select"
+        />
+      </div>
+      <div class="flex flex-col grow basis-0 gap-2">
+        <label for="createdFrom">Created from</label>
+        <p-datepicker
+          inputId="createdFrom"
+          [formControl]="taskListPageStateService.taskFilterForm.controls.createdFrom"
+          [maxDate]="taskListPageStateService.taskFilterForm.controls.createdTo.value || undefined"
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          placeholder="From"
+        />
+      </div>
+      <div class="flex flex-col grow basis-0 gap-2">
+        <label for="createdTo">Created to</label>
+        <p-datepicker
+          inputId="createdTo"
+          [formControl]="taskListPageStateService.taskFilterForm.controls.createdTo"
+          [minDate]="
+            taskListPageStateService.taskFilterForm.controls.createdFrom.value || undefined
+          "
+          dateFormat="yy-mm-dd"
+          [showIcon]="true"
+          [showButtonBar]="true"
+          placeholder="To"
+        />
+      </div>
+      <div class="flex items-end gap-2">
+        <p-button
+          type="button"
+          label="Clear"
+          severity="secondary"
+          icon="pi pi-times"
+          (onClick)="onClear()"
+        >
+        </p-button>
+
+        <p-button type="submit" label="Submit" icon="pi pi-check" (onClick)="onSubmit()">
+        </p-button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<p-table
+  [value]="tasks()"
+  [loading]="loading()"
+  [lazy]="true"
+  [paginator]="true"
+  [first]="taskListPageStateService.first()"
+  [rows]="taskListPageStateService.size()"
+  [totalRecords]="taskListPageStateService.totalElements()"
+  dataKey="id"
+  styleClass="p-datatable-gridlines"
+  [sortField]="taskListPageStateService.sortField()"
+  [sortOrder]="taskListPageStateService.sortOrder()"
+  (onLazyLoad)="onLazyLoadTasks($event)"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+      <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+      <th class="w-[18rem] max-w-[18rem]">Tags</th>
+      <th>Priority</th>
+      <th>Status</th>
+      <th pSortableColumn="createdAt">Created <p-sortIcon field="createdAt" /></th>
+      <th></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-task>
+    <tr class="task-row" (click)="openTask(task)">
+      <td>{{ task.id }}</td>
+      <td>{{ task.name }}</td>
+      <td class="w-[18rem] max-w-[18rem] align-center">
+        <div class="flex flex-wrap justify-start gap-2">
+          @for (tag of task.tags; track tag.code) {
+            <ws-tag-pill [value]="tag.label" [color]="tag.color" />
+          }
+        </div>
+      </td>
+      <td><ws-tag-pill [value]="task.priority" /></td>
+      <td><ws-tag-pill [value]="task.status" /></td>
+      <td>{{ task.createdAt | date: 'dd.MM.yyyy HH:mm' }}</td>
+      <td class="w-32">
+        <div class="flex justify-end gap-2">
+          <p-button
+            icon="pi pi-pencil"
+            [rounded]="true"
+            [outlined]="true"
+            severity="secondary"
+            (onClick)="editTask($event, task.id)"
+          />
+
+          <p-button
+            icon="pi pi-trash"
+            [rounded]="true"
+            [outlined]="true"
+            severity="danger"
+            (onClick)="onDeleteTask($event, task.id)"
+          />
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+<p-confirmdialog [style]="{ width: '450px' }" />

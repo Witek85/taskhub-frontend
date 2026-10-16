@@ -1,0 +1,62 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "start:remote": "ng serve --proxy-config proxy.remote.conf.json",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\"",
+    "openapi:taskhub:download": "node openapi/scripts/download-spec.mjs http://localhost:8080/v3/api-docs openapi/taskhub-service/openapi.json",
+    "openapi:taskhub:clean": "node openapi/scripts/clean-generated.mjs openapi/taskhub-service/generated",
+    "openapi:taskhub:generate": "openapi-generator-cli generate -c openapi/taskhub-service/generator-config.json",
+    "openapi:taskhub:refresh": "npm run openapi:taskhub:download && npm run openapi:taskhub:clean && npm run openapi:taskhub:generate",
+    "openapi:download": "npm run openapi:taskhub:download",
+    "openapi:generate": "npm run openapi:taskhub:generate",
+    "openapi:refresh": "npm run openapi:taskhub:refresh"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "packageManager": "npm@10.9.2",
+  "dependencies": {
+    "@angular/animations": "^21.2.16",
+    "@angular/common": "^21.0.0",
+    "@angular/compiler": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "@angular/forms": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
+    "@angular/router": "^21.0.0",
+    "@primeng/themes": "^21.0.4",
+    "@tailwindcss/postcss": "^4.3.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^21.1.9",
+    "rxjs": "~7.8.0",
+    "tailwindcss-primeui": "^0.6.1",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.0.3",
+    "@angular/cli": "^21.0.3",
+    "@angular/compiler-cli": "^21.0.0",
+    "@openapitools/openapi-generator-cli": "^2.40.1",
+    "jsdom": "^27.1.0",
+    "prettier": "^3.8.4",
+    "tailwindcss": "^4.1.11",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}
