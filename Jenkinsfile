@@ -71,17 +71,6 @@ pipeline {
             }
         }
 
-        stage('Approve Production') {
-            steps {
-                timeout(time: 30, unit: 'MINUTES') {
-                    input(
-                        message: 'Deploy TaskHub frontend to production?',
-                        ok: 'Deploy'
-                    )
-                }
-            }
-        }
-
         stage('Deploy Frontend') {
             steps {
                 sshagent(credentials: ['taskhub-vps-ssh']) {
