@@ -3,73 +3,116 @@
 <div class="card flex flex-col gap-4">
   <form [formGroup]="taskListPageStateService.taskFilterForm">
     <div class="font-semibold text-l mb-2">Filters</div>
-    <div class="flex flex-wrap gap-6">
-      <div class="flex flex-col grow basis-0 gap-2">
-        <label for="name2">Name</label>
-        <input
-          pInputText
-          type="text"
-          [formControl]="taskListPageStateService.taskFilterForm.controls.name"
-        />
+    <div class="flex">
+      <div class="flex-1">
+        <div class="flex flex-wrap gap-6 mb-2">
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="name2">Name</label>
+            <input
+              pInputText
+              type="text"
+              [formControl]="taskListPageStateService.taskFilterForm.controls.name"
+            />
+          </div>
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="name2">Priority</label>
+            <p-select
+              [formControl]="taskListPageStateService.taskFilterForm.controls.priority"
+              [options]="priorities()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select"
+            />
+          </div>
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="name2">Status</label>
+            <p-select
+              [formControl]="taskListPageStateService.taskFilterForm.controls.status"
+              [options]="statuses()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select"
+            />
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-6">
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="tagCodes">Tags</label>
+            <p-multiselect
+              inputId="tagCodes"
+              [formControl]="taskListPageStateService.taskFilterForm.controls.tagCodes"
+              [options]="tags()"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select tags"
+              display="chip"
+              [filter]="true"
+              [showClear]="true"
+              [showToggleAll]="true"
+              class="w-full"
+            />
+          </div>
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label
+              for="allTagsIncluded"
+              [class.text-surface-400]="
+                taskListPageStateService.taskFilterForm.controls.allTagsIncluded.disabled
+              "
+              >Tag matching
+            </label>
+            <p-selectbutton
+              [formControl]="taskListPageStateService.taskFilterForm.controls.allTagsIncluded"
+              [options]="tagMatchOptions"
+              optionLabel="label"
+              optionValue="value"
+              [allowEmpty]="false"
+              ariaLabelledBy="tagMatchingLabel"
+            />
+          </div>
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="createdFrom">Created from</label>
+            <p-datepicker
+              inputId="createdFrom"
+              [formControl]="taskListPageStateService.taskFilterForm.controls.createdFrom"
+              [maxDate]="
+                taskListPageStateService.taskFilterForm.controls.createdTo.value || undefined
+              "
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [showButtonBar]="true"
+              placeholder="From"
+            />
+          </div>
+          <div class="flex flex-col grow basis-0 gap-2">
+            <label for="createdTo">Created to</label>
+            <p-datepicker
+              inputId="createdTo"
+              [formControl]="taskListPageStateService.taskFilterForm.controls.createdTo"
+              [minDate]="
+                taskListPageStateService.taskFilterForm.controls.createdFrom.value || undefined
+              "
+              dateFormat="yy-mm-dd"
+              [showIcon]="true"
+              [showButtonBar]="true"
+              placeholder="To"
+            />
+          </div>
+        </div>
       </div>
-      <div class="flex flex-col grow basis-0 gap-2">
-        <label for="name2">Priority</label>
-        <p-select
-          [formControl]="taskListPageStateService.taskFilterForm.controls.priority"
-          [options]="priorities()"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select"
-        />
-      </div>
-      <div class="flex flex-col grow basis-0 gap-2">
-        <label for="name2">Status</label>
-        <p-select
-          [formControl]="taskListPageStateService.taskFilterForm.controls.status"
-          [options]="statuses()"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select"
-        />
-      </div>
-      <div class="flex flex-col grow basis-0 gap-2">
-        <label for="createdFrom">Created from</label>
-        <p-datepicker
-          inputId="createdFrom"
-          [formControl]="taskListPageStateService.taskFilterForm.controls.createdFrom"
-          [maxDate]="taskListPageStateService.taskFilterForm.controls.createdTo.value || undefined"
-          dateFormat="yy-mm-dd"
-          [showIcon]="true"
-          [showButtonBar]="true"
-          placeholder="From"
-        />
-      </div>
-      <div class="flex flex-col grow basis-0 gap-2">
-        <label for="createdTo">Created to</label>
-        <p-datepicker
-          inputId="createdTo"
-          [formControl]="taskListPageStateService.taskFilterForm.controls.createdTo"
-          [minDate]="
-            taskListPageStateService.taskFilterForm.controls.createdFrom.value || undefined
-          "
-          dateFormat="yy-mm-dd"
-          [showIcon]="true"
-          [showButtonBar]="true"
-          placeholder="To"
-        />
-      </div>
-      <div class="flex items-end gap-2">
-        <p-button
-          type="button"
-          label="Clear"
-          severity="secondary"
-          icon="pi pi-times"
-          (onClick)="onClear()"
-        >
-        </p-button>
+      <div class="w-64 flex justify-end">
+        <div class="flex items-end gap-2">
+          <p-button
+            type="button"
+            label="Clear"
+            severity="secondary"
+            icon="pi pi-times"
+            (onClick)="onClear()"
+          >
+          </p-button>
 
-        <p-button type="submit" label="Submit" icon="pi pi-check" (onClick)="onSubmit()">
-        </p-button>
+          <p-button type="submit" label="Submit" icon="pi pi-check" (onClick)="onSubmit()">
+          </p-button>
+        </div>
       </div>
     </div>
   </form>

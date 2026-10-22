@@ -49,6 +49,8 @@ export class TaskApiService {
         ...(criteria.status ? { status: criteria.status } : {}),
         ...(criteria.createdFrom ? { createdFrom: criteria.createdFrom } : {}),
         ...(criteria.createdTo ? { createdTo: criteria.createdTo } : {}),
+        ...(criteria.tagCodes ? { tagCodes: criteria.tagCodes } : {}),
+        ...(criteria.allTagsIncluded ? { allTagsIncluded: criteria.allTagsIncluded } : {}),
       })
       .pipe(map(mapTaskPageFromApi));
   }

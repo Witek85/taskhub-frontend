@@ -22,6 +22,8 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DatePipe } from '@angular/common';
 import { TableLazyLoadEvent } from 'primeng/table';
 import { TagPillComponent } from '../../../../shared/components/tag-pill/tag-pill.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-task-list-page',
@@ -35,6 +37,8 @@ import { TagPillComponent } from '../../../../shared/components/tag-pill/tag-pil
     SelectModule,
     DatePickerModule,
     DatePipe,
+    MultiSelectModule,
+    SelectButtonModule,
   ],
   providers: [ConfirmationService, TaskListPageStateService],
   templateUrl: './task-list-page.component.html',
@@ -46,6 +50,12 @@ export class TaskListPageComponent implements OnInit {
   public priorities = signal<DictionaryOption<TaskPriority>[]>([]);
   public statuses = signal<DictionaryOption<TaskStatus>[]>([]);
   public searchCriteria = signal<TaskSearchCriteria>({});
+  public tags = signal<DictionaryOption[]>([]);
+
+  readonly tagMatchOptions = [
+    { label: 'Any tag', value: false },
+    { label: 'All tags', value: true },
+  ];
 
   public readonly taskListPageStateService: TaskListPageStateService =
     inject(TaskListPageStateService);
@@ -58,6 +68,8 @@ export class TaskListPageComponent implements OnInit {
   public ngOnInit(): void {
     this.getPriorities();
     this.getStatuses();
+    this.getTags();
+    this.subscribeToTagCodesValueChanges();
   }
 
   public onClear(): void {
@@ -207,6 +219,28 @@ export class TaskListPageComponent implements OnInit {
       });
   }
 
+  private getTags(): void {
+    this.taskApi
+      .getTags()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((res) => {
+        this.tags.set(res);
+      });
+  }
+
+  private subscribeToTagCodesValueChanges(): void {
+    const { tagCodes, allTagsIncluded } = this.taskListPageStateService.taskFilterForm.controls;
+
+    tagCodes.valueChanges.subscribe((codes) => {
+      if (codes.length > 1) {
+        allTagsIncluded.enable({ emitEvent: false });
+      } else {
+        allTagsIncluded.setValue(false, { emitEvent: false });
+        allTagsIncluded.disable({ emitEvent: false });
+      }
+    });
+  }
+
   private buildSearchCriteria(): TaskSearchCriteria {
     const value = this.taskListPageStateService.taskFilterForm.getRawValue();
 
@@ -216,6 +250,8 @@ export class TaskListPageComponent implements OnInit {
       status: value.status || undefined,
       createdFrom: this.toDateParam(value.createdFrom),
       createdTo: this.toDateParam(value.createdTo),
+      tagCodes: value.tagCodes || [],
+      allTagsIncluded: value.allTagsIncluded,
     };
   }
 

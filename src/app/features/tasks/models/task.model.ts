@@ -48,6 +48,8 @@ export interface TaskSearchCriteria {
   status?: TaskStatus;
   createdFrom?: string;
   createdTo?: string;
+  tagCodes?: string[];
+  allTagsIncluded?: boolean;
 }
 
 export type TaskFormControls = {
@@ -63,4 +65,6 @@ export type TaskFilterFormControls = {
   status: FormControl<TaskStatus | null>;
   createdFrom: FormControl<Date | null>;
   createdTo: FormControl<Date | null>;
+  tagCodes: FormControl<string[]>;
+  allTagsIncluded: FormControl<boolean>;
 };

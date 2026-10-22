@@ -46,5 +46,12 @@ export class TaskListPageStateService {
     status: new FormControl<TaskStatus | null>(null),
     createdFrom: new FormControl<Date | null>(null),
     createdTo: new FormControl<Date | null>(null),
+    tagCodes: new FormControl<string[]>([], {
+      nonNullable: true,
+    }),
+    allTagsIncluded: new FormControl<boolean>(
+      { value: false, disabled: true },
+      { nonNullable: true },
+    ),
   });
 }
